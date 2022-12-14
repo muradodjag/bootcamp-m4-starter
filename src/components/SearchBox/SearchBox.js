@@ -1,43 +1,59 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect, useState } from 'react';
+import { connect } from 'react-redux';
+import { changeSearch } from '../../redux/Movies/actions';
+
+
 import './SearchBox.css';
 
-class SearchBox extends Component {
-    state = {
-        searchLine: ''
+const mapStateToProps = (state) => {
+    return {
+        searchLine: state.searchLine
     }
-    searchLineChangeHandler = (e) => {
-        this.setState({ searchLine: e.target.value });
-    }
-    searchBoxSubmitHandler = (e) => {
-        e.preventDefault();
-    }
-    render() {
-        const { searchLine } = this.state;
+};
 
-        return (
-            <div className="search-box">
-                <form className="search-box__form" onSubmit={this.searchBoxSubmitHandler}>
-                    <label className="search-box__form-label">
-                        Искать фильм по названию:
-                        <input
-                            value={searchLine}
-                            type="text"
-                            className="search-box__form-input"
-                            placeholder="Например, Shawshank Redemption"
-                            onChange={this.searchLineChangeHandler}
-                        />
-                    </label>
-                    <button
-                        type="submit"
-                        className="search-box__form-submit"
-                        disabled={!searchLine}
-                    >
-                        Искать
-                    </button>
-                </form>
-            </div>
-        );
+const mapDispatchToProps = dispatch => (
+    {
+        onChangeSearch: (text) => dispatch(changeSearch(text))
     }
+)
+
+function SearchBox({ onChangeSearch }) {
+    const [searchLine, setSearchLine] = useState('')
+    const searchLineChangeHandler = (e) => {
+        setSearchLine(e.target.value);
+    }
+    const searchBoxSubmitHandler = (e) => {
+        e.preventDefault();
+        console.log(searchLine)
+        onChangeSearch(searchLine);
+    }
+    useEffect(() => {
+        onChangeSearch('')
+    })
+
+    return (
+        <div className="search-box">
+            <form className="search-box__form" onSubmit={searchBoxSubmitHandler}>
+                <label className="search-box__form-label">
+                    Искать фильм по названию:
+                    <input
+                        value={searchLine}
+                        type="text"
+                        className="search-box__form-input"
+                        placeholder="Например, Shawshank Redemption"
+                        onChange={searchLineChangeHandler}
+                    />
+                </label>
+                <button
+                    type="submit"
+                    className="search-box__form-submit"
+                    disabled={!searchLine}
+                >
+                    Искать
+                </button>
+            </form>
+        </div>
+    );
 }
- 
-export default SearchBox;
+
+export default connect(mapStateToProps, mapDispatchToProps)(SearchBox);
