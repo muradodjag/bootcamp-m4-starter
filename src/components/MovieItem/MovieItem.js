@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { addToList, deleteFromList } from '../../redux/Favorites/actions';
 import './MovieItem.css';
@@ -6,7 +6,7 @@ import './MovieItem.css';
 const mapStateToProps = (state) => {
     return {
         movies: state.reducerMovies.movies,
-        favorite: state.reducerFavorite.favorite[0]
+        favorite: state.reducerFavorite.favorite
     }
 };
 

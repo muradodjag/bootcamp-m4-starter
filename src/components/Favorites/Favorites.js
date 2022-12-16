@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { useState } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -34,7 +34,7 @@ function Favorites({ favorite, onDeleteFromList, onClick }) {
             },
             body: JSON.stringify({
                 "title": title,
-                "movies": favorite[0].movies.map(({ imdbID }) => ([`${imdbID}`]))
+                "movies": favorite.movies.map(({ imdbID }) => ([`${imdbID}`]))
             }),
         })
             .then(res => { return res.json() })
@@ -44,17 +44,18 @@ function Favorites({ favorite, onDeleteFromList, onClick }) {
                 console.log(data)
             })
     }
+
     return (
         <div className="favorites">
             <input value={title} className="favorites__name" placeholder="Введите название списка" onChange={onChangeTitle} />
             <ul className="favorites__list">
-                {favorite.map((e) => {
-                    return (
-                        e.movies.map((movie) => (
-                            <li key={movie.imdbID} className="favorites__list-item">{movie.Title} ({movie.Year}) <button onClick={() => onDeleteFromList(movie.imdbID)}>X</button></li>
-                        ))
-                    )
-                })
+                {
+                    favorite.movies.map((movie) => (
+                        <li key={movie.imdbID} className="favorites__list-item">{movie.Title} ({movie.Year}) <button onClick={() => onDeleteFromList(movie.imdbID)}>X</button></li>
+                    ))
+
+
+
                 }
             </ul>
 
