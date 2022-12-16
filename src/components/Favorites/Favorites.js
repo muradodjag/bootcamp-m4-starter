@@ -1,27 +1,75 @@
 import React, { Component } from 'react';
+import { useState } from 'react';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { changeTitle, deleteFromList } from '../../redux/Favorites/actions';
 import './Favorites.css';
 
-
-class Favorites extends Component {
-    state = {
-        title: 'Новый список',
-        movies: [
-            { imdbID: 'tt0068646', title: 'The Godfather', year: 1972 }
-        ]
-    }
-    render() { 
-        return (
-            <div className="favorites">
-                <input value="Новый список" className="favorites__name" />
-                <ul className="favorites__list">
-                    {this.state.movies.map((item) => {
-                        return <li key={item.id}>{item.title} ({item.year})</li>;
-                    })}
-                </ul>
-                <button type="button" className="favorites__save">Сохранить список</button>
-            </div>
-        );
+const mapStateToProps = (state) => {
+    return {
+        favorite: state.reducerFavorite.favorite
     }
 }
- 
-export default Favorites;
+const mapDispatchToProps = dispatch => ({
+    onDeleteFromList: (idx) => dispatch(deleteFromList(idx)),
+    onClick: (title) => dispatch(changeTitle(title))
+})
+
+function Favorites({ favorite, onDeleteFromList, onClick }) {
+    const [title, setTitle] = useState('');
+    const [data, setData] = useState([]);
+    const [process, setProcess] = useState(false);
+    const onChangeTitle = (e) => {
+        setTitle(e.target.value)
+    }
+
+    const getListLinks = (event) => {
+        event.preventDefault()
+        setProcess(true);
+        fetch("https://acb-api.algoritmika.org/api/movies/list/", {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                "title": title,
+                "movies": favorite[0].movies.map(({ imdbID }) => ([`${imdbID}`]))
+            }),
+        })
+            .then(res => { return res.json() })
+            .then(data => {
+                setData(data)
+                setProcess(false)
+                console.log(data)
+            })
+    }
+    return (
+        <div className="favorites">
+            <input value={title} className="favorites__name" placeholder="Введите название списка" onChange={onChangeTitle} />
+            <ul className="favorites__list">
+                {favorite.map((e) => {
+                    return (
+                        e.movies.map((movie) => (
+                            <li key={movie.imdbID} className="favorites__list-item">{movie.Title} ({movie.Year}) <button onClick={() => onDeleteFromList(movie.imdbID)}>X</button></li>
+                        ))
+                    )
+                })
+                }
+            </ul>
+
+            {
+
+                !data?.id ?
+                    <button type="button" className="favorites__save" disabled={!title} onClick={getListLinks}>{process ? "Идет запрос..." : "Сохранить список"}</button> :
+                    <Link to={{ pathname: `/list/${data.id}`, state: { ...data } }}>Перейти к списку</Link>
+
+            }
+
+        </div>
+
+    );
+
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Favorites);

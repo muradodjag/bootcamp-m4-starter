@@ -1,5 +1,4 @@
 export function changeMoviesList(movies) {
-    console.log('gdfgdfgdf5g4df');
     return {
         type: 'CHANGE_MOVE_LIST',
         payload: {
@@ -12,7 +11,7 @@ export function changeSearch(text) {
     return {
         type: 'CHANGE_SEARCH_TEXT',
         payload: {
-            searchText: text
+            search: text
         }
     }
 }

@@ -6,9 +6,10 @@ import MovieItem from '../MovieItem/MovieItem';
 import './Movies.css';
 
 const mapStateToProps = (state) => {
+
     return {
-        searchText: state.searchLine,
-        movies: state.movies
+        search: state.reducerMovies.searchLine,
+        movies: state.reducerMovies.movies
     }
 };
 
@@ -16,22 +17,22 @@ const mapDispatchToProps = dispatch => ({
     onClickSearch: (movies) => dispatch(changeMoviesList(movies))
 })
 
-function Movies({ onClickSearch, searchText, movies }) {
+function Movies({ search, movies, onClickSearch }) {
+
     const getMovies = async () => {
-        if (searchText) {
-            const resp = await fetch(`http://www.omdbapi.com/?s=${searchText}&apikey=eded1b16`);
+        if (search) {
+            const resp = await fetch(`http://www.omdbapi.com/?s=${search.trim()}&apikey=eded1b16`);
             const data = await resp.json();
-            onClickSearch(data.Search)
+            onClickSearch(data?.Search)
         }
         else {
             onClickSearch([])
         }
-
     }
 
     useEffect(() => {
         getMovies()
-    }, [searchText])
+    }, [search])
     return (
         <ul className="movies">
             {movies?.map((movie) => (

@@ -7,7 +7,7 @@ import './SearchBox.css';
 
 const mapStateToProps = (state) => {
     return {
-        searchLine: state.searchLine
+        searchLine: state.reducerMovies.searchLine
     }
 };
 
@@ -24,7 +24,6 @@ function SearchBox({ onChangeSearch }) {
     }
     const searchBoxSubmitHandler = (e) => {
         e.preventDefault();
-        console.log(searchLine)
         onChangeSearch(searchLine);
     }
     useEffect(() => {

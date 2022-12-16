@@ -5,17 +5,16 @@ import './MovieItem.css';
 
 const mapStateToProps = (state) => {
     return {
-        movies: state.movies,
-        favorite: state.favorite[0]
+        movies: state.reducerMovies.movies,
+        favorite: state.reducerFavorite.favorite[0]
     }
 };
 
 const mapDispatchToProps = dispatch => ({
-    onAddToFav: (id) => dispatch(addToList(id)),
-    onDeleteFromFav: (idx) => dispatch(deleteFromList(idx))
+    onAddToFav: (id, movies) => dispatch(addToList(id, movies)),
 })
 
-function MovieItem({ Title, Year, Poster, onAddToFav, imdbID }) {
+function MovieItem({ Title, Year, Poster, onAddToFav, imdbID, movies }) {
 
     return (
         <article className="movie-item">
@@ -24,7 +23,7 @@ function MovieItem({ Title, Year, Poster, onAddToFav, imdbID }) {
                 <h3 className="movie-item__title">{Title}&nbsp;({Year})</h3>
 
 
-                <button type="button" className="movie-item__add-button" onClick={() => { onAddToFav(imdbID) }}>Добавить в список</button> :
+                <button type="button" className="movie-item__add-button" onClick={() => { onAddToFav(imdbID, movies) }}>Добавить в список</button> :
 
 
             </div>

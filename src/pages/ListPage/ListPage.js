@@ -6,16 +6,15 @@ import './ListPage.css';
 function ListPage() {
     const location = useLocation();
     const [data, setData] = useState([]);
+    console.log(location.state)
     const { id } = location.state;
 
     const getFavMovies = async (id) => {
-        try {
-            const resp = await fetch(`https://acb-api.algoritmika.org/api/movies/list/${id}`)
-            const data = await resp.json();
-            setData(data);
-        } catch (error) {
-            setData([])
-        }
+
+        const res = await fetch(`https://acb-api.algoritmika.org/api/movies/list/${id}`)
+        const data = await res.json();
+        setData(data);
+
 
     }
     useEffect(() => {
@@ -27,7 +26,7 @@ function ListPage() {
         <div className="list-page">
             <h1 className="list-page__title">Мой список</h1>
             <ul>
-                {data.movies.map((item) => {
+                {data.movies?.map((item) => {
                     return <FavMovies item={item} key={item}> </FavMovies>
                 })}
             </ul>
@@ -38,18 +37,23 @@ function ListPage() {
 
 function FavMovies({ item }) {
     const [movie, setMovie] = useState([])
-    const getMovieInfo = async () => {
-        const resp = await fetch(`http://www.omdbapi.com/?i=${item}&apikey=eded1b16`)
-        const data = await resp.json()
-        setMovie(data);
+
+    const getMovie = async () => {
+        const res = await fetch(`http://www.omdbapi.com/?i=${item}&apikey=cdd098d5`)
+        const data = await res.json()
+        console.log(data)
+        setMovie(data)
     }
 
+
     useEffect(() => {
-        getMovieInfo()
+        getMovie()
     }, [])
+
+
     return (
         <li key={item.imdbID}>
-            <a href="https://www.imdb.com/title/tt0068646/" target="_blank">{item.title} ({item.year})</a>
+            <a href={`https://www.imdb.com/title/${item}/`} target="_blank">{movie.Title} ({movie.Year})</a>
         </li>
     );
 
