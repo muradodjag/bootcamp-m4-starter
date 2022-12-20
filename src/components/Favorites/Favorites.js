@@ -41,7 +41,6 @@ function Favorites({ favorite, onDeleteFromList, onClick }) {
             .then(data => {
                 setData(data)
                 setProcess(false)
-                console.log(data)
             })
     }
 
