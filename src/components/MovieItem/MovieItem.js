@@ -23,7 +23,7 @@ function MovieItem({ Title, Year, Poster, onAddToFav, imdbID, movies }) {
                 <h3 className="movie-item__title">{Title}&nbsp;({Year})</h3>
 
 
-                <button type="button" className="movie-item__add-button" onClick={() => { onAddToFav(imdbID, movies) }}>Добавить в список</button> :
+                <button type="button" className="movie-item__add-button" onClick={() => { onAddToFav(imdbID, movies) }}>Добавить в список</button>
 
 
             </div>
